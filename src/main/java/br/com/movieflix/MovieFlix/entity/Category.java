@@ -1,8 +1,16 @@
 package br.com.movieflix.MovieFlix.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+
 
 @Entity
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
 @Table(name = "category")
 public class Category {
 
@@ -12,14 +20,6 @@ public class Category {
 
     @Column(length = 100, nullable = false)
     private String nome;
-
-    public Category() {
-    }
-
-    public Category(Long id, String nome) {
-        this.id = id;
-        this.nome = nome;
-    }
 
     public Long getId() {
         return id;
