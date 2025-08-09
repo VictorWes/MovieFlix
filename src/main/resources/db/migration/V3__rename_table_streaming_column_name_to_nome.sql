@@ -1,0 +1,1 @@
+ALTER TABLE streaming RENAME COLUMN name TO nome
