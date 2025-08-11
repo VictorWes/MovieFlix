@@ -1,0 +1,1 @@
+ALTER TABLE movie RENAME COLUMN updated_at TO update_at;
