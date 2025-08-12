@@ -3,6 +3,7 @@ package br.com.movieflix.MovieFlix.Controller;
 import br.com.movieflix.MovieFlix.Controller.request.StreamingRequest;
 import br.com.movieflix.MovieFlix.Controller.response.StreamingResponse;
 import br.com.movieflix.MovieFlix.entity.Streaming;
+import br.com.movieflix.MovieFlix.mapper.MovieMapper;
 import br.com.movieflix.MovieFlix.mapper.StreamingMapper;
 import br.com.movieflix.MovieFlix.services.StreamingService;
 import org.springframework.http.HttpStatus;
@@ -53,5 +54,14 @@ public class StreamingController {
     public ResponseEntity<Void> deletarByStreamingId(@PathVariable Long id) {
         streamingService.deleteStreamingById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<StreamingResponse> updateStreaming(@PathVariable Long id, @RequestBody StreamingRequest request){
+
+        return streamingService.update(id, StreamingMapper.toStreaming(request))
+                .map(content -> ResponseEntity.ok(StreamingMapper.toResponse(content)))
+                .orElse(ResponseEntity.notFound().build());
+
     }
 }
