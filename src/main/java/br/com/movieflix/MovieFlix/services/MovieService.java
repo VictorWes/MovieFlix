@@ -6,7 +6,6 @@ import br.com.movieflix.MovieFlix.entity.Streaming;
 import br.com.movieflix.MovieFlix.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +31,11 @@ public class MovieService {
 
     public List<Movie> findAll(){
         return movieRepository.findAll();
+    }
+
+
+    public List<Movie> findByCategorie(Long categoryId){
+        return movieRepository.findMovieByCategories(List.of(Category.builder().id(categoryId).build()));
     }
 
     public Optional<Movie> findById(Long id){
@@ -79,6 +83,10 @@ public class MovieService {
         streamings.forEach(streaming ->
                 streamingService.findById(streaming.getId()).ifPresent(streamingsFound::add));
         return streamingsFound;
+    }
+
+    public void delete(Long movieId){
+        movieRepository.deleteById(movieId);
     }
 
 
