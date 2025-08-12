@@ -2,9 +2,12 @@ package br.com.movieflix.MovieFlix.Controller;
 
 
 import br.com.movieflix.MovieFlix.Controller.request.CategoryRequest;
+import br.com.movieflix.MovieFlix.Controller.request.StreamingRequest;
 import br.com.movieflix.MovieFlix.Controller.response.CategoryResponse;
+import br.com.movieflix.MovieFlix.Controller.response.StreamingResponse;
 import br.com.movieflix.MovieFlix.entity.Category;
 import br.com.movieflix.MovieFlix.mapper.CategoryMapper;
+import br.com.movieflix.MovieFlix.mapper.StreamingMapper;
 import br.com.movieflix.MovieFlix.services.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,4 +58,12 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponse> updateStreaming(@PathVariable Long id, @RequestBody CategoryRequest request){
+
+        return categoryService.update(id, CategoryMapper.toCategory(request))
+                .map(content -> ResponseEntity.ok(CategoryMapper.toCategoryResponse(content)))
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

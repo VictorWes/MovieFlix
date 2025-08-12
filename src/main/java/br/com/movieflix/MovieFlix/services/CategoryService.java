@@ -1,6 +1,7 @@
 package br.com.movieflix.MovieFlix.services;
 
 import br.com.movieflix.MovieFlix.entity.Category;
+import br.com.movieflix.MovieFlix.entity.Streaming;
 import br.com.movieflix.MovieFlix.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,21 @@ public class CategoryService {
 
     public void deleteCategoryById(Long id){
         categoryRepository.deleteById(id);
+    }
+
+    public Optional<Category> update(Long id, Category category){
+        Optional<Category> byId = categoryRepository.findById(id);
+        if (byId.isPresent()){
+
+            Category categoryAltered = byId.get();
+
+            categoryAltered.setNome(category.getNome());
+            categoryRepository.save(categoryAltered);
+            return Optional.of(categoryAltered);
+
+        }
+        return Optional.empty();
+
     }
 
 }
