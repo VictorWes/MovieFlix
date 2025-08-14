@@ -7,6 +7,7 @@ import br.com.movieflix.MovieFlix.Controller.response.LoginResponse;
 import br.com.movieflix.MovieFlix.Controller.response.UserResponse;
 import br.com.movieflix.MovieFlix.config.TokenService;
 import br.com.movieflix.MovieFlix.entity.User;
+import br.com.movieflix.MovieFlix.exception.UsernameOrPassWordInvalidException;
 import br.com.movieflix.MovieFlix.mapper.UserMapper;
 import br.com.movieflix.MovieFlix.services.UserService;
 import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,14 +48,19 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
-        UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(request.email(), request.password());
-        Authentication authenticate = authenticationManager.authenticate(userAndPass);
+        try {
 
-        User user = (User) authenticate.getPrincipal();
+            UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+            Authentication authenticate = authenticationManager.authenticate(userAndPass);
 
-        String token = tokenService.generateToken(user);
+            User user = (User) authenticate.getPrincipal();
 
-        return ResponseEntity.ok(new LoginResponse(token));
+            String token = tokenService.generateToken(user);
 
+            return ResponseEntity.ok(new LoginResponse(token));
+
+        }catch (BadCredentialsException e){
+            throw new UsernameOrPassWordInvalidException("Usuario ou senha invalida");
+        }
     }
 }
